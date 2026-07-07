@@ -1,0 +1,100 @@
+# electron-builder.yml
+#
+# Packages the Electron shell + the frozen codeably-api binary
+# (produced by PyInstaller in CI) into platform installers.
+#
+# The frozen binary is placed next to this file by CI before the build:
+#   desktop/codeably-api          (mac/linux)
+#   desktop/codeably-api.exe      (windows)
+#
+# electron-builder copies extraResources into:
+#   mac:   Codeably.app/Contents/Resources/
+#   win:   resources/
+#   linux: resources/
+
+appId:       com.codeably.app
+productName: Codeably
+copyright:   "© 2025 Codeably"
+
+# Custom URI scheme — Google OAuth redirects to codeably://auth
+# electron-builder registers this on all platforms automatically.
+protocols:
+  - name: Codeably
+    schemes:
+      - codeably
+
+# Icon files (must exist before building)
+# Place your icons at desktop/icons/
+icon: icons/icon.png   # macOS/Linux — electron-builder auto-picks .icns on mac if present
+# win:
+#   icon: icons/icon.ico
+
+directories:
+  output: dist          # built installers land here
+  buildResources: build # optional extra build assets
+
+# Bundle the frozen Python API binary as an extra resource
+# electron-builder copies these into the app's resources folder
+extraResources:
+  - from: "codeably-api"          # mac / linux binary (placed by CI)
+    to:   "codeably-api"
+    filter: ["**"]
+  - from: "codeably-api.exe"      # windows binary (placed by CI)
+    to:   "codeably-api.exe"
+    filter: ["**"]
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+mac:
+  category:     public.app-category.developer-tools
+  target:
+    - target: dmg
+      arch: [x64, arm64]   # Intel + Apple Silicon
+  icon:         icons/icon.icns
+  hardenedRuntime:   true
+  gatekeeperAssess:  false
+  entitlements:      build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  # Notarization — runs automatically when APPLE_ID / APPLE_APP_SPECIFIC_PASSWORD
+  # / APPLE_TEAM_ID env vars are present (set as GitHub Actions secrets).
+  # electron-builder v24+ handles xcrun notarytool internally; no extra script needed.
+  notarize:
+    teamId: ${APPLE_TEAM_ID}
+
+dmg:
+  title:       "Install Codeably"
+  background:  build/dmg-background.png   # optional, can be removed
+  contents:
+    - x: 130; y: 220; type: file
+    - x: 410; y: 220; type: link; path: /Applications
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+win:
+  target:
+    - target: nsis   # produces a standard Windows installer .exe
+      arch: [x64]
+  icon: icons/icon.ico
+
+nsis:
+  oneClick:        false
+  allowToChangeInstallationDirectory: true
+  installerIcon:   icons/icon.ico
+  uninstallerIcon: icons/icon.ico
+  shortcutName:    Codeably
+
+# ── Linux ─────────────────────────────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+  category: Development
+  icon:      icons/icon.png
+
+# ── Files to include in the Electron package ─────────────────────────────────
+files:
+  - electron/**
+  - ui/**
+  - "!node_modules/**"
+  - "!dist/**"
+  - "!*.spec"

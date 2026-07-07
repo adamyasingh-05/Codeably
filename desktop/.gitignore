@@ -1,0 +1,15 @@
+# Electron dependencies
+node_modules/
+
+# electron-builder output
+dist/
+
+# Staged PyInstaller binaries (placed by CI, not committed)
+codeably-api
+codeably-api.exe
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

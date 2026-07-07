@@ -1,0 +1,17 @@
+{
+  "name": "codeably",
+  "version": "2.0.0",
+  "description": "Autonomous coding agent — desktop app",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev":   "electron .",
+    "build": "electron-builder build --config electron-builder.yml",
+    "build:mac":   "electron-builder build --mac   --config electron-builder.yml",
+    "build:win":   "electron-builder build --win   --config electron-builder.yml",
+    "build:linux": "electron-builder build --linux --config electron-builder.yml"
+  },
+  "devDependencies": {
+    "electron":         "^30.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}

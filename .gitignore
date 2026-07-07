@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.codeably/
+*.log
+
+# Tauri / Rust build output
+desktop/src-tauri/target/
+
+# Node (if a JS toolchain is ever added around the UI)
+node_modules/
+
+.DS_Store
+Thumbs.db

@@ -1,0 +1,20 @@
+# Core server
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-multipart==0.0.20
+
+# Database (optional — app runs fine without Postgres)
+psycopg2-binary==2.9.10
+
+# AI providers (install only what you plan to use)
+anthropic==0.42.0
+openai==1.59.6
+groq==0.15.0
+google-generativeai==0.8.3
+mistralai==1.5.0
+cohere==5.13.6
+
+# Utilities used by tools/index.py
+psutil==6.1.1
+httpx>=0.27
